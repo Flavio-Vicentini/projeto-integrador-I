@@ -11,11 +11,17 @@ class UsersRepository implements IUsersRepository {
     this.repository = getRepository(User);
   }
 
-  async create({ name, email, password }: ICreateUserDTO): Promise<void> {
+  async create({
+    name,
+    email,
+    password,
+    is_admin,
+  }: ICreateUserDTO): Promise<void> {
     const user = this.repository.create({
       name,
       email,
       password,
+      is_admin,
     });
 
     await this.repository.save(user);

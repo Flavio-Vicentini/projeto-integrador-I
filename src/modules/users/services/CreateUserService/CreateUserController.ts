@@ -13,6 +13,7 @@ class CreateUserController {
       name,
       email,
       password,
+      is_admin: false,
     });
     return response.status(201).send();
   }

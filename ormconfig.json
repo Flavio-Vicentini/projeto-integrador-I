@@ -5,7 +5,7 @@
     "username": "postgres",
     "password": "postgres123!@",
     "database": "os_manager",
-    "entities": ["./src/modules/users/entities/*.ts"],
+    "entities": ["./src/modules/*/entities/*.ts"],
     "migrations": ["./src/database/migrations/*.ts"],
     "cli": {
         "migrationsDir": "./src/database/migrations"

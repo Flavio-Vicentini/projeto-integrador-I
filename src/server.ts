@@ -6,13 +6,16 @@ import express, {
 } from "express";
 
 import "reflect-metadata";
-import "./database";
 import "express-async-errors";
 import "./shared/container";
+import createConnection from "./database/index";
 import { AppError } from "./errors/AppError";
 import { router } from "./routes";
 
+createConnection();
+
 const app = express();
+
 app.use(express.json() as RequestHandler);
 app.use(router);
 
