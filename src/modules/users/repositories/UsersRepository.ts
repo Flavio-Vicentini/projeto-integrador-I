@@ -27,10 +27,6 @@ class UsersRepository implements IUsersRepository {
     await this.repository.save(user);
   }
   async findByEmail(email: string): Promise<User> {
-    // const rawData = await this.repository.query(
-    //   `SELECT * FROM users where email = '${email}'`
-    // );
-    // console.log(rawData[0].id);
     const user = await this.repository.findOne({ email });
     return user;
   }
@@ -38,6 +34,11 @@ class UsersRepository implements IUsersRepository {
   async findById(user_id: string): Promise<User> {
     const user = await this.repository.findOne(user_id);
     return user;
+  }
+
+  async listExternalUsers(): Promise<User[]> {
+    const users = await this.repository.find({ is_admin: false });
+    return users;
   }
 }
 
