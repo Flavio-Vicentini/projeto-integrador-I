@@ -9,6 +9,7 @@ class ServiceOrdersRepository implements IServiceOrdersRepository {
   constructor() {
     this.repository = getRepository(ServiceOrder);
   }
+
   async create({
     id_client,
     id_external_user,
@@ -37,9 +38,14 @@ class ServiceOrdersRepository implements IServiceOrdersRepository {
   }
   async listAllServiceOrders(): Promise<ServiceOrder[]> {
     const serviceOrders = await this.repository.find({
-      relations: ["client", "external_user", "open_so_user"],
+      relations: ["client", "external_user", "open_so_user", "notes"],
     });
     return serviceOrders;
+  }
+
+  async finishSo(id: string, status: string, close_date: Date): Promise<void> {
+    await this.repository.findOne(id);
+    await this.repository.save({ id, status, close_date });
   }
 }
 

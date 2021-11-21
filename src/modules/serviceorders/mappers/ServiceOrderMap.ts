@@ -1,3 +1,5 @@
+import { Note } from "../entities/Note";
+
 interface IOrders {
   id: string;
   id_client: string;
@@ -12,6 +14,7 @@ interface IOrders {
   requester_phone: string;
   created_at: Date;
   updated_at: Date;
+  notes: Note[];
   client: {
     id: string;
     name: string;
@@ -61,50 +64,50 @@ interface IServiceOrderResponse {
     cpf_cnpj: string;
     telephone: string;
   };
+  notes: {
+    id: string;
+    observations: string;
+    created_at: Date;
+  }[];
 }
 class ServiceOrderMap {
-  static toDTO([
-    {
-      id,
-
-      protocol,
-      defect,
-      close_date,
-      open_date,
-      requester_name,
-      requester_phone,
-      status,
-      external_user,
-      open_so_user,
-      client,
-    },
-  ]: IOrders[]): IServiceOrderResponse {
-    return {
-      id,
-      protocol,
-      status,
-      defect,
-      open_date,
-      close_date,
-      requester_name,
-      requester_phone,
-      client: {
-        id: client.id,
-        name: client.name,
-        cpf_cnpj: client.cpf_cnpj,
-        telephone: client.telephone,
-      },
-      open_so_user: {
-        id: open_so_user.id,
-        name: open_so_user.name,
-        email: open_so_user.email,
-      },
-      external_user: {
-        id: external_user.id,
-        name: external_user.name,
-        email: external_user.email,
-      },
-    };
+  static toDTO(orders: IOrders[]): IServiceOrderResponse[] {
+    const response = orders.map((order) => {
+      return {
+        id: order.id,
+        protocol: order.protocol,
+        status: order.status,
+        defect: order.defect,
+        open_date: order.open_date,
+        close_date: order.close_date,
+        requester_name: order.requester_name,
+        requester_phone: order.requester_phone,
+        client: {
+          id: order.client.id,
+          name: order.client.name,
+          cpf_cnpj: order.client.cpf_cnpj,
+          telephone: order.client.telephone,
+        },
+        open_so_user: {
+          id: order.open_so_user.id,
+          name: order.open_so_user.name,
+          email: order.open_so_user.email,
+        },
+        external_user: {
+          id: order.external_user.id,
+          name: order.external_user.name,
+          email: order.external_user.email,
+        },
+        notes: order.notes.map((note) => {
+          return {
+            id: note.id,
+            observations: note.observations,
+            created_at: note.created_at,
+          };
+        }),
+      };
+    });
+    return response;
   }
 }
 

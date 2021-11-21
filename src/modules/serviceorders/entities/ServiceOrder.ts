@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -11,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Client } from "../../clients/entities/Client";
 import { User } from "../../users/entities/User";
+import { Note } from "./Note";
 
 @Entity("service_orders")
 class ServiceOrder {
@@ -34,6 +36,10 @@ class ServiceOrder {
   open_so_user: User;
   @Column()
   id_open_so_user: string;
+
+  @OneToMany((type) => Note, (note) => note.order)
+  @JoinColumn()
+  notes: Note[];
 
   @Column()
   protocol: string;

@@ -15,20 +15,18 @@ class CreateSoService {
     id_external_user,
     id_open_so_user,
     defect,
-    close_date,
-    open_date,
     requester_name,
     requester_phone,
-    status,
   }: ICreateServiceOrderDTO): Promise<void> {
     const protocol = generateProtocol();
+    const open_date = new Date();
+    const status = "Aberto";
     await this.serviceOrdersRepository.create({
       id_client,
       id_external_user,
       id_open_so_user,
       protocol,
       defect,
-      close_date,
       open_date,
       requester_name,
       requester_phone,

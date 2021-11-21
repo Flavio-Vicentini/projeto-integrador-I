@@ -15,4 +15,5 @@ export interface IServiceOrdersRepository {
     status,
   }: ICreateServiceOrderDTO): Promise<void>;
   listAllServiceOrders(): Promise<ServiceOrder[]>;
+  finishSo(id: string, status: string, close_date: Date): Promise<void>;
 }

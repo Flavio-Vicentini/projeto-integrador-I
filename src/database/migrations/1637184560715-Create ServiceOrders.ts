@@ -45,6 +45,7 @@ export class CreateServiceOrders1637184560715 implements MigrationInterface {
           {
             name: "close_date",
             type: "timestamp",
+            isNullable: true,
           },
           {
             name: "requester_name",

@@ -9,11 +9,8 @@ class CreateSoController {
       id_client,
       id_external_user,
       defect,
-      close_date,
-      open_date,
       requester_name,
       requester_phone,
-      status,
     } = request.body;
     const { id: id_open_so_user } = request.user;
     const createSoService = container.resolve(CreateSoService);
@@ -23,11 +20,8 @@ class CreateSoController {
       id_external_user,
       id_open_so_user,
       defect,
-      close_date,
-      open_date,
       requester_name,
       requester_phone,
-      status,
     });
     return response.status(201).send();
   }
