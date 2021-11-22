@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryColumn,
+} from "typeorm";
 import { v4 as uuidv4 } from "uuid";
+
+import { Address } from "./Address";
 
 @Entity("clients")
 class Client {
@@ -17,6 +26,10 @@ class Client {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany((type) => Address, (address) => address.client)
+  @JoinColumn()
+  address: Address[];
 
   constructor() {
     if (!this.id) {

@@ -1,6 +1,8 @@
 import { container } from "tsyringe";
 
+import { AddressRepository } from "../../modules/clients/repositories/AddressRepository";
 import { ClientsRepository } from "../../modules/clients/repositories/ClientsRepository";
+import { IAddressRepository } from "../../modules/clients/repositories/IAddressRepository";
 import { IClientsRepository } from "../../modules/clients/repositories/IClientsRepostiory";
 import { INotesRepository } from "../../modules/serviceorders/repositories/INotesRepository";
 import { IServiceOrdersRepository } from "../../modules/serviceorders/repositories/IServiceOrdersRepository";
@@ -25,4 +27,9 @@ container.registerSingleton<IServiceOrdersRepository>(
 container.registerSingleton<INotesRepository>(
   "NotesRepository",
   NotesRepository
+);
+
+container.registerSingleton<IAddressRepository>(
+  "AddressRepository",
+  AddressRepository
 );

@@ -20,7 +20,7 @@ class ClientsRepository implements IClientsRepository {
     return client;
   }
   async listAllClients(): Promise<Client[]> {
-    const clients = await this.repository.find();
+    const clients = await this.repository.find({ relations: ["address"] });
     return clients;
   }
 }
