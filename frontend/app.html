@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo.css">
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <title>MSP Telecomunicações - Central de Serviços</title>
+</head>
+<body>
+    <div id="tela-login" class="w100 h100">
+        <div class="defcolor w60 h100 ib">
+            <div class="w100 h100 logo"></div>
+        </div>
+        <div class="w40 h100 ib fr">
+            <div class="h100">
+                <div class="h25 ctr">
+                    <span class="h100 ctr lh225px fxxl">Central de Serviços</span>
+                </div>
+                <div class="h100"> 
+                    <div class="h75px barra-abas ctr">
+                        <span id="lnk-con-prot" class="h100 ib aba w40 selected">Consulta de Protocolo</span>
+                        <span id="lnk-ac-func" class="h100 ib aba w40">Acesso Funcionário</span>
+                    </div>
+                    <div id="div-func" class="m85px">
+                        <form id="frm-func" name="acesso-funcionario" action="#" method="post">
+                            <label for="email">Usuário</label>
+                            <input type="email" name="email" id="email" class="w100 input" placeholder="usuario@email.com">
+                            <label for="senha">Senha</label>
+                            <input type="password" name="senha" id="senha" class="w100 input" placeholder="******">
+                            <input type="submit" id="btn-login" value="Acessar" class="w100px input fr">
+                        </form>
+                    </div>
+                    <div id="div-prot" class="m85px">
+                        <form id="frm-prot" name="consulta-protocolo" action="#" method="post">
+                            <label for="protocolo">Protocolo</label>
+                            <input type="text" name="protocolo" id="protocolo" class="w100 input" placeholder="Número de Protocolo">
+                            <input type="submit" id="btn-consultar" value="Consultar" class="w100px input fr">
+                        </form>
+                    </div>            
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tela-registro-defeitos" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Registro de Defeitos</h1>
+                </div>
+            </div>
+        </header>
+        </div>        
+    </div>
+    <div id="tela-situacao-protocolo" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Situação de Protocolo</h1>
+                </div>
+            </div>                    
+        </header>
+        <div class="flex m70t">
+            <div class="flex-col m15px">
+                <label for="protocolo">Protocolo</label>
+                <span id="prot" class="input w350">#num-prot</span>
+            </div>
+            <div class="flex-col m15px">
+                <label for="data">Data</label>
+                <span id="data" class="input w140">#data</span>
+            </div>        
+            <div class="flex-col m15px">
+                <label for="horario">Horário</label>
+                <span id="hora" class="input w140">#horario</span>
+            </div>                           
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="cliente">Cliente</label>
+                <span id="cliente" class="input w415">#cliente</span>
+            </div>
+            <div class="flex-col m15px">
+                <label for="tecnico-atrib">Técnico Responsável</label>
+                <span id="tecnico" class="input w255">#tecnico</span>
+            </div>                                 
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="acompanhamentos">Acompanhamentos</label>
+                <textarea class="input w715 h270" id="acompanhamentos">#acomp</textarea>
+            </div>                          
+        </div>      
+        <div class="flex">
+            <div class="flex-col m15px w80">
+                <button id="btn-voltar" class="input">Voltar</button>
+            </div>                          
+        </div>  
+    </div>
+    <div id="tela-lista-servicos" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Lista de Serviços</h1>
+                </div>
+            </div>                    
+        </header>   
+        <div>
+            <button id="btn_table">Adicionar Teste</button>
+            <button id="btn_limpar">Limpar Tabela</button>
+            <div class="scroll">
+                <table id="tblservicos" class="m70t margin-auto">
+                    <tr>
+                        <th class="w100px">Protocolo</th>
+                        <th class="w255">Cliente</th>
+                        <th class="w140">Requerente</th>
+                        <th>Opções</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Cliente Teste</td>
+                        <td>Funcionario</td>
+                        <td><a href="#">Ver</a></td>
+                    </tr>
+                  </table>
+            </div>
+        </div>
+    </div> 
+    <div id="tela-area-restrita" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Área Administrativa</h1>
+                </div>
+            </div>                    
+        </header>   
+        <div>
+            <button id="btn-cad-cli">Cadastro de Clientes</button>
+            <button id="btn-reg-prob">Registrar Ordem de Serviço</button>
+            <button id="btn-logoff">Sair do Sistema</button>
+        </div>
+    </div>  
+    <div id="tela-cadastro-cliente" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Cadastro de Clientes</h1>
+                </div>
+            </div>                    
+        </header>
+        <div class="flex m70t">
+            <div class="flex-col m15px">
+                <label for="nome-cli">Nome</label>
+                <input id="nome-cli" class="input w350"></input>
+            </div>                        
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="cpf-cnpj">CPF/CNPJ</label>
+                <input id="cpf-cnpj" class="input w415"></input>
+            </div>                                
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="telefone">Telefone</label>
+                <input id="telefone" class="input w415"></input>
+            </div>                          
+        </div>      
+        <div class="flex">
+            <div class="flex-col m15px w80">
+                <button id="btn-salvar" class="input">Salvar</button>
+                <button id="btn-cancelar" class="input">Cancelar</button>
+            </div>                          
+        </div>  
+    </div>       
+    <script src="js/main.js"></script>
+</body>
+</html>
