@@ -1,22 +1,4 @@
-var dados_usuarios = [
-    {"id": "1", "email": "admin@msp.com", "senha": "123123", "is_admin": "1"}//,
-    //{"id": "2", "email": "tecnico@msp.com", "senha": "123456", "is_admin": "0"}
-];
-
-var dados_cliente = [
-    {"id": "1", "nome": "Cliente Teste", "CPFCPNJ": "123123123"}
-];
-
-var dados_protocolos = [
-    {"id": "1", "protocolo": "123", "cliente": "Cliente Teste", "requerente": "Funcionário"}, 
-    {"id": "2", "protocolo": "124", "cliente": "Cliente Teste 2", "requerente": "Funcionário Teste"}
-];
-
-var dados_acompanhamentos = [
-    {"id": "1", "protocolo": "123", "observacao": "Em verificação"},
-    {"id": "2", "protocolo": "123", "observacao": "Problema solucionado"},
-    {"id": "3", "protocolo": "124", "observacao": "Em verificação"}
-];
+var dados_protocolos;
 
 function doLogout() {
     localStorage.removeItem("name");
@@ -57,6 +39,24 @@ function cadastraCliente(nome, cpf_cnpj, telefone) {
         console.log(error);
         alert("Erro ao cadastrar cliente, verifique os dados e tente novamente");
     })
+}
+
+function listaProtocolos() {
+    axios.get('/api/orders', {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        dados_protocolos = response;
+
+        dados_protocolos.data.forEach(function(protocolo, index) {
+            $("#tblservicos_adm").remove("tr");
+            $("#tblservicos_adm").append("<tr><td>"+protocolo.protocol+"</td><td>"+protocolo.client.name+"</td><td>"+protocolo.requester_name+"</td><td><button onclick='verificaSitProt("+protocolo.protocol+")'>Ver</button></td></tr>");
+        });
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Ocorreu um erro ao listar os protocolos. Saia e entre novamente no sistema.");
+    });
 }
 
 function validaLogin(usuario, senha) {
@@ -127,6 +127,7 @@ function showListaServ() {
 
 function showAreaRestrita() {
     $("#tela-area-restrita").show("fast");
+    listaProtocolos();
 }
 
 function showCadCli() {
@@ -162,15 +163,6 @@ showLogin();
 verifySession();
 $("#div-func").hide();
 
-function atualizaTabela(id_func) {
-    
-    if (!id_func) {
-        dados_protocolos.forEach(function(item, index) {
-            $("#tblservicos_adm").append("<tr><td>"+item.protocolo+"</td><td>"+item.cliente+"</td><td>"+item.requerente+"</td><td><button onclick='verificaSitProt("+item.protocolo+")'>Ver</button></td></tr>");
-        });
-    }
-
-}
 
 $("#btn_table").on("click", function() {
     $("#tblservicos").append("<tr><td>1</td><td>Cliente Teste</td><td>Funcionario</td><td><button onclick>Ver</button></td></tr>");
