@@ -1,14 +1,38 @@
-var dados_protocolo = {
-    "protocolo": "123",
-    "data": "01/01/01",
-    "hora": "01:01:01",
-    "cliente": "Cliente",
-    "tecnico": "Técnico",
-    "acompanhamentos": {
-        "1": "Em verificação",
-        "2": "Problema solucionado"
+var dados_usuarios = [
+    {"id": "1", "email": "admin@msp.com", "senha": "123123", "is_admin": "1"}//,
+    //{"id": "2", "email": "tecnico@msp.com", "senha": "123456", "is_admin": "0"}
+];
+
+var dados_cliente = [
+    {"id": "1", "nome": "Cliente Teste", "CPFCPNJ": "123123123"}
+];
+
+var dados_protocolos = [
+    {"id": "1", "protocolo": "123", "cliente": "Cliente Teste", "requerente": "Funcionário"}, 
+    {"id": "2", "protocolo": "124", "cliente": "Cliente Teste 2", "requerente": "Funcionário Teste"}
+];
+
+var dados_acompanhamentos = [
+    {"id": "1", "protocolo": "123", "observacao": "Em verificação"},
+    {"id": "2", "protocolo": "123", "observacao": "Problema solucionado"},
+    {"id": "3", "protocolo": "124", "observacao": "Em verificação"}
+];
+
+function validaLogin(usuario, senha) {
+    if (dados_usuarios[0].email == usuario && dados_usuarios[0].senha == senha) {
+        return dados_usuarios[0];
+    } else {
+        return false;
     }
 }
+
+function carregaDadosProtocolo(numero) {
+    if (dados_protocolos[0].protocolo == numero) {
+        return dados_protocolos[0];
+    } else {
+        return false;
+    }
+};
 
 function showLogin() {
     $("#tela-login").show("fast");
@@ -20,23 +44,33 @@ function showLogin() {
 }
 
 function showRegProb() {
-    $("#tela-registro-defeitos").show();
+    $("#tela-registro-defeitos").show("fast");
 }
 
-function showSitProt() {
-    $("#tela-situacao-protocolo").show();
+function showSitProt(protocolo) {
+    $("#tela-situacao-protocolo").show("fast");
+
+    $("#prot").text(protocolo.protocolo);
+    $("#data").text(protocolo.protocolo);
+    $("#hora").text(protocolo.protocolo);
+    $("#cliente").text(protocolo.cliente);
+    $("#tecnico").text(protocolo.protocolo);
+}
+
+function verificaSitProt(num_protocolo) {
+    showSitProt(carregaDadosProtocolo(num_protocolo));
 }
 
 function showListaServ() {
-    $("#tela-lista-servicos").show();
+    $("#tela-lista-servicos").show("fast");
 }
 
 function showAreaRestrita() {
-    $("#tela-area-restrita").show();
+    $("#tela-area-restrita").show("fast");
 }
 
 function showCadCli() {
-    $("#tela-cadastro-cliente").show();
+    $("#tela-cadastro-cliente").show("fast");
 }
 
 function hideLogin() {
@@ -66,20 +100,18 @@ function hideCadCli() {
 showLogin();
 $("#div-func").hide();
 
-
-
 function atualizaTabela(id_func) {
     
     if (!id_func) {
-        dados_protocolo.forEach(item => {
-            $("#tblservicos").append("<tr><td>"+item.protocolo+"</td><td>"+item.cliente+"</td><td>"+item.tecnico+"</td><td><a href='#'>Ver</a></td></tr>");
+        dados_protocolos.forEach(function(item, index) {
+            $("#tblservicos_adm").append("<tr><td>"+item.protocolo+"</td><td>"+item.cliente+"</td><td>"+item.requerente+"</td><td><button onclick='verificaSitProt("+item.protocolo+")'>Ver</button></td></tr>");
         });
     }
 
 }
 
 $("#btn_table").on("click", function() {
-    $("#tblservicos").append("<tr><td>1</td><td>Cliente Teste</td><td>Funcionario</td><td><a href='#'>Ver</a></td></tr>");
+    $("#tblservicos").append("<tr><td>1</td><td>Cliente Teste</td><td>Funcionario</td><td><button onclick>Ver</button></td></tr>");
 });
 
 $("#btn_limpar").on("click", function() {
@@ -106,17 +138,11 @@ $("#frm-prot").on("submit", function(e) {
     console.log("Consulta Protocolo");
 
     var protocolo = $("#protocolo").val();
+    var prot_tmp = carregaDadosProtocolo(protocolo);
 
-    if(protocolo == "123") {
+    if (prot_tmp) {
         hideLogin();
-        $("#tela-situacao-protocolo").show();
-
-        $("#prot").text(dados_protocolo.protocolo);
-        $("#data").text(dados_protocolo.data);
-        $("#hora").text(dados_protocolo.hora);
-        $("#cliente").text(dados_protocolo.cliente);
-        $("#tecnico").text(dados_protocolo.tecnico);
-        $("#acompanhamentos").text(JSON.stringify(dados_protocolo.acompanhamentos));
+        showSitProt(prot_tmp);
     } else {
         alert("Número de protocolo inválido");
         showLogin();
@@ -150,17 +176,20 @@ $("#btn-cancelar").on("click", function() {
 
 $("#frm-func").on("submit", function(e) {
     e.preventDefault();
-    console.log("Login");
+    console.log("Tentativa de Login");
 
-    var login = $("#email").val();
+    var email = $("#email").val();
     var senha = $("#senha").val();
 
-    if(login === "tecnico@msp.com" && senha === "123123") {
+    var session = validaLogin(email, senha);
+
+    if (session) {
         hideLogin();
-        $("#tela-lista-servicos").show();
-    } else if(login === "admin@msp.com" && senha === "123123") {
-        hideLogin();
-        $("#tela-area-restrita").show();
+        if (session.is_admin == "1") {
+            showAreaRestrita();
+        } else {
+            showListaServ();
+        }
     } else {
         alert("Usuário ou senha inválidos");
         showLogin();

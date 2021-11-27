@@ -142,6 +142,7 @@ html, body {
     display: block;
     height: 48px;
     background: #C4C4C4;
+    text-indent: 5px;
 }
 
 .logo {
