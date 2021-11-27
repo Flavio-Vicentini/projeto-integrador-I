@@ -8,7 +8,7 @@ class CreateNoteController {
     const { id: id_order } = request.params;
     const { observations } = request.body;
     const createNoteService = container.resolve(CreateNoteService);
-    createNoteService.execute(id_order, observations);
+    await createNoteService.execute(id_order, observations);
     return response.status(201).send();
   }
 }

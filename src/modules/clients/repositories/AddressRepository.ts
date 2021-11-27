@@ -9,6 +9,7 @@ class AddressRepository implements IAddressRepository {
   constructor() {
     this.repository = getRepository(Address);
   }
+
   async create({
     id_client,
     type,
@@ -28,6 +29,15 @@ class AddressRepository implements IAddressRepository {
       zip_code,
     });
     await this.repository.save(address);
+  }
+
+  async deleteAddressById(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
+
+  async findById(id: string): Promise<Address> {
+    const address = await this.repository.findOne(id);
+    return address;
   }
 }
 

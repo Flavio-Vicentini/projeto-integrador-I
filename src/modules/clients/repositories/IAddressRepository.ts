@@ -1,4 +1,5 @@
 import { ICreateAddressDTO } from "../dtos/ICreateAddressDTO";
+import { Address } from "../entities/Address";
 
 export interface IAddressRepository {
   create({
@@ -9,4 +10,6 @@ export interface IAddressRepository {
     district,
     zip_code,
   }: ICreateAddressDTO): Promise<void>;
+  deleteAddressById(id: string): Promise<void>;
+  findById(id: string): Promise<Address>;
 }

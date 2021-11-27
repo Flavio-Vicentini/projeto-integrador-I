@@ -23,6 +23,18 @@ class ClientsRepository implements IClientsRepository {
     const clients = await this.repository.find({ relations: ["address"] });
     return clients;
   }
+
+  async listClientById(id: string): Promise<Client> {
+    const client = await this.repository.findOne(
+      { id },
+      { relations: ["address"] }
+    );
+    return client;
+  }
+
+  async deleteClientById(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
 }
 
 export { ClientsRepository };

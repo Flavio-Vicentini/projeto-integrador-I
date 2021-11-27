@@ -43,9 +43,25 @@ class ServiceOrdersRepository implements IServiceOrdersRepository {
     return serviceOrders;
   }
 
-  async finishSo(id: string, status: string, close_date: Date): Promise<void> {
-    await this.repository.findOne(id);
+  async alterStatus(
+    id: string,
+    status: string,
+    close_date: Date
+  ): Promise<void> {
     await this.repository.save({ id, status, close_date });
+  }
+
+  async findById(id: string): Promise<ServiceOrder> {
+    const order = await this.repository.findOne(id);
+    return order;
+  }
+
+  async listByProtocol(protocol: string): Promise<ServiceOrder> {
+    const order = await this.repository.findOne(
+      { protocol },
+      { relations: ["client", "external_user", "open_so_user", "notes"] }
+    );
+    return order;
   }
 }
 

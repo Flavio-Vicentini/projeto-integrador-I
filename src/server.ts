@@ -15,7 +15,6 @@ import { router } from "./routes";
 createConnection();
 
 const app = express();
-
 app.use(express.json() as RequestHandler);
 app.use(router);
 
