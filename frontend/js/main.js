@@ -18,12 +18,72 @@ var dados_acompanhamentos = [
     {"id": "3", "protocolo": "124", "observacao": "Em verificação"}
 ];
 
-function validaLogin(usuario, senha) {
-    if (dados_usuarios[0].email == usuario && dados_usuarios[0].senha == senha) {
-        return dados_usuarios[0];
+function doLogout() {
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
+    localStorage.removeItem("token");
+}
+
+function verifySession() {
+    if (localStorage["name"] != undefined && localStorage["email"] != undefined && localStorage["token"] != undefined) {
+        if (localStorage["name"] == "admin") {
+            hideLogin();
+            showAreaRestrita();
+        } else {
+            hideLogin();
+            showListaServ();
+        }
     } else {
-        return false;
+        showLogin();
     }
+}
+
+function cadastraCliente(nome, cpf_cnpj, telefone) {
+    axios.post('/api/clients', {
+        "name": nome,
+        "cpf_cnpj": cpf_cnpj,
+        "telephone": telefone
+    },
+    {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        
+        $("#nome-cli").val("");
+        $("#cpf-cnpj").val("");
+        $("#telefone").val("");
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Erro ao cadastrar cliente, verifique os dados e tente novamente");
+    })
+}
+
+function validaLogin(usuario, senha) {
+
+    axios.post('/api/users/sessions', {
+        "email":usuario,
+        "password":senha
+    }).then(function (response) {
+        console.log(response);
+
+        localStorage["name"] = response.data.user.name;
+        localStorage["email"] = response.data.user.email;
+        localStorage["token"] = response.data.token;
+        
+        if (response.data.user.name == "admin") {
+                hideLogin();
+                showAreaRestrita();
+            } else {
+                hideLogin();
+                showListaServ();
+        }
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Usuário ou senha inválidos!");
+    });
+
 }
 
 function carregaDadosProtocolo(numero) {
@@ -97,7 +157,9 @@ function hideCadCli() {
     $("#tela-cadastro-cliente").hide("fast");
 }
 
+
 showLogin();
+verifySession();
 $("#div-func").hide();
 
 function atualizaTabela(id_func) {
@@ -155,6 +217,7 @@ $("#btn-voltar").on("click", function() {
 });
 
 $("#btn-logoff").on("click", function() {
+    doLogout();
     showLogin();
     hideAreaRestrita();
 });
@@ -181,17 +244,13 @@ $("#frm-func").on("submit", function(e) {
     var email = $("#email").val();
     var senha = $("#senha").val();
 
-    var session = validaLogin(email, senha);
-
-    if (session) {
-        hideLogin();
-        if (session.is_admin == "1") {
-            showAreaRestrita();
-        } else {
-            showListaServ();
-        }
-    } else {
-        alert("Usuário ou senha inválidos");
-        showLogin();
-    }
+    validaLogin(email, senha);
 });
+
+$("#btn-salvar").on("click", function(e) {
+    var nome = $("#nome-cli").val();
+    var cpf_cnpj = $("#cpf-cnpj").val();
+    var telefone = $("#telefone").val();
+
+    cadastraCliente(nome, cpf_cnpj, telefone);
+})
