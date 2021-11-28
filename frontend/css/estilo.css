@@ -9,6 +9,10 @@ html, body {
     overflow: hidden;
 }
 
+table button {
+    width: 100%;
+}
+
 .header {
     background: #BABABA;
     height: 175px;
@@ -101,6 +105,10 @@ html, body {
 
 .w100px {
     width: 100px;
+}
+
+.w105 {
+    width: 105px;;
 }
 
 .pl10 {
@@ -256,4 +264,8 @@ tr:nth-child(even) {
 
 .scroll {
     overflow-y: auto;
+}
+
+.barra-btn {
+    text-align: right;
 }
