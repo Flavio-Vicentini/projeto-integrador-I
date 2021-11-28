@@ -127,6 +127,10 @@ html, body {
     width: 715px;
 }
 
+.w735 {
+    width: 735px;
+}
+
 .h270 {
     height: 270px !important;
 }
@@ -143,6 +147,7 @@ html, body {
     height: 48px;
     background: #C4C4C4;
     text-indent: 5px;
+    font-size: 15px;
 }
 
 .logo {

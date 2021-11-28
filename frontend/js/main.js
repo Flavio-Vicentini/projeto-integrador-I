@@ -1,4 +1,5 @@
 var dados_protocolos;
+var dados_clientes;
 
 function doLogout() {
     localStorage.removeItem("name");
@@ -41,6 +42,27 @@ function cadastraCliente(nome, cpf_cnpj, telefone) {
     })
 }
 
+function cadastraTecnico(nome, email, senha) {
+    axios.post('/api/users', {
+        "name": nome,
+        "email": email,
+        "password": senha
+    },
+    {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        
+        $("#nome-tec").val("");
+        $("#email-tec").val("");
+        $("#senha-tec").val("");
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Erro ao cadastrar técnico, verifique os dados e tente novamente");
+    })
+}
+
 function listaProtocolos() {
     axios.get('/api/orders', {
         headers: {"Authorization": 'Bearer ' + localStorage["token"]}
@@ -48,14 +70,54 @@ function listaProtocolos() {
         console.log(response);
         dados_protocolos = response;
 
+        if (localStorage["name"] == "admin") {
+        $("#tblservicos_adm").empty();
+        $("#tblservicos_adm").append("<tr><th class='w100px'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
+
         dados_protocolos.data.forEach(function(protocolo, index) {
-            $("#tblservicos_adm").remove("tr");
-            $("#tblservicos_adm").append("<tr><td>"+protocolo.protocol+"</td><td>"+protocolo.client.name+"</td><td>"+protocolo.requester_name+"</td><td><button onclick='verificaSitProt("+protocolo.protocol+")'>Ver</button></td></tr>");
+            if (protocolo.status != "Solucionado") {
+                $("#tblservicos_adm").append("<tr><td>"+protocolo.protocol+"</td><td>"+protocolo.client.name+"</td><td>"+protocolo.requester_name+"</td><td><button onclick='buscaProtocolo(\""+protocolo.protocol+"\")'>Ver</button></td></tr>");                
+            }
         });
+        } else {
+            $("#tblservicos").empty();
+            $("#tblservicos").append("<tr><th class='w100px'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
+    
+            dados_protocolos.data.forEach(function(protocolo, index) {
+                if (protocolo.status != "Solucionado" && protocolo.external_user.email == localStorage["email"]) {
+                    $("#tblservicos").append("<tr><td>"+protocolo.protocol+"</td><td>"+protocolo.client.name+"</td><td>"+protocolo.requester_name+"</td><td><button onclick='buscaProtocolo(\""+protocolo.protocol+"\")'>Ver</button></td></tr>");                
+                }
+            });
+        }
 
     }).catch(function (error) {
         console.log(error);
         alert("Ocorreu um erro ao listar os protocolos. Saia e entre novamente no sistema.");
+    });
+}
+
+function buscaProtocolo(protocolo) {
+    axios.get('/api/orders', {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        dados_protocolos_tmp = response;
+
+        dados_protocolos_tmp.data.forEach(function(protocolo_tmp, index) {
+            if (protocolo_tmp.protocol == protocolo) {
+                $("#tela-situacao-protocolo").show("fast");
+
+                $("#prot").text(protocolo_tmp.protocol);
+                $("#data").text(protocolo_tmp.open_date);
+                $("#hora").text(protocolo_tmp.open_date);
+                $("#cliente").text(protocolo_tmp.client.name);
+                $("#tecnico").text(protocolo_tmp.external_user.name);
+            } else {
+            console.log("Erro: protocolo não encontrado");
+        }})
+
+    }).catch(function (error) {
+        console.log(error);
     });
 }
 
@@ -86,13 +148,47 @@ function validaLogin(usuario, senha) {
 
 }
 
-function carregaDadosProtocolo(numero) {
-    if (dados_protocolos[0].protocolo == numero) {
-        return dados_protocolos[0];
-    } else {
-        return false;
-    }
-};
+function carregaClientes() {
+    axios.get('/api/clients', {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        dados_clientes = response;
+
+        $("#cbcliente").empty();
+        $("#cbcliente").append("<option></option>")
+        $("#cbcliente").append("<option>Cadastrar Novo</option>")
+        $("#cbcliente").append("<option></option>")
+
+        dados_clientes.data.forEach(function(cliente, index) {
+            $("#cbcliente").append("<option value="+cliente.id+">"+cliente.name+"</option>");
+        });
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Ocorreu um erro ao listar os clientes. Saia e entre novamente no sistema.");
+    });
+}
+
+function carregaTecnicos() {
+    axios.get('/api/users', {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        dados_users = response;
+
+        $("#cbtecnico").empty();
+        $("#cbtecnico").append("<option></option>")
+
+        dados_users.data.forEach(function(user, index) {
+            $("#cbtecnico").append("<option value="+user.id+">"+user.name+"</option>");
+        });
+
+    }).catch(function (error) {
+        console.log(error);
+        alert("Ocorreu um erro ao listar os técnicos. Saia e entre novamente no sistema.");
+    });
+}
 
 function showLogin() {
     $("#tela-login").show("fast");
@@ -105,24 +201,13 @@ function showLogin() {
 
 function showRegProb() {
     $("#tela-registro-defeitos").show("fast");
-}
-
-function showSitProt(protocolo) {
-    $("#tela-situacao-protocolo").show("fast");
-
-    $("#prot").text(protocolo.protocolo);
-    $("#data").text(protocolo.protocolo);
-    $("#hora").text(protocolo.protocolo);
-    $("#cliente").text(protocolo.cliente);
-    $("#tecnico").text(protocolo.protocolo);
-}
-
-function verificaSitProt(num_protocolo) {
-    showSitProt(carregaDadosProtocolo(num_protocolo));
+    carregaClientes();
+    carregaTecnicos();
 }
 
 function showListaServ() {
     $("#tela-lista-servicos").show("fast");
+    listaProtocolos();
 }
 
 function showAreaRestrita() {
@@ -132,6 +217,10 @@ function showAreaRestrita() {
 
 function showCadCli() {
     $("#tela-cadastro-cliente").show("fast");
+}
+
+function showCadTec() {
+    $("#tela-cadastro-tecnico").show("fast");
 }
 
 function hideLogin() {
@@ -158,6 +247,9 @@ function hideCadCli() {
     $("#tela-cadastro-cliente").hide("fast");
 }
 
+function hideCadTec() {
+    $("#tela-cadastro-tecnico").hide("fast");
+}
 
 showLogin();
 verifySession();
@@ -192,26 +284,32 @@ $("#frm-prot").on("submit", function(e) {
     console.log("Consulta Protocolo");
 
     var protocolo = $("#protocolo").val();
-    var prot_tmp = carregaDadosProtocolo(protocolo);
 
-    if (prot_tmp) {
+    axios.get('/api/orders/protocol', {
+        "protocol": protocolo
+    }).then(function (response) {
+        console.log(response);
         hideLogin();
-        showSitProt(prot_tmp);
-    } else {
-        alert("Número de protocolo inválido");
+        showSitProt(protocolo.protocol);
+    }).catch(function (error) {
+        console.log(error);
+        alert("Protocolo não encontrado!");
         showLogin();
-    }
+    });
 });
 
 $("#btn-voltar").on("click", function() {
-    showLogin();
     hideSitProt();
+    if (localStorage["name"] == undefined) {
+        showLogin();   
+    }
 });
 
-$("#btn-logoff").on("click", function() {
+$(".logoff-btn").on("click", function() {
     doLogout();
     showLogin();
     hideAreaRestrita();
+    hideListaServ();
 });
 
 $("#btn-cad-cli").on("click", function() {
@@ -219,13 +317,19 @@ $("#btn-cad-cli").on("click", function() {
     showCadCli();
 });
 
+$("#btn-cad-tec").on("click", function() {
+    hideAreaRestrita();
+    showCadTec();
+});
+
 $("#btn-reg-prob").on("click", function() {
     hideAreaRestrita();
     showRegProb();
 });
 
-$("#btn-cancelar").on("click", function() {
+$(".btn-cancelar-adm").on("click", function() {
     hideCadCli();
+    hideCadTec();
     showAreaRestrita();
 });
 
@@ -246,3 +350,40 @@ $("#btn-salvar").on("click", function(e) {
 
     cadastraCliente(nome, cpf_cnpj, telefone);
 })
+
+$("#btn-salvar-tec").on("click", function(e) {
+    var nome = $("#nome-tec").val();
+    var email = $("#email-tec").val();
+    var senha = $("#senha-tec").val();
+
+    cadastraTecnico(nome, email, senha);
+})
+
+$("#btn-def-salvar").on("click", function(e) {
+    var client_id = $("#cbcliente").val();
+    var requester_name = $("#requerente").val();
+    var tel_req = $("#contato_req").val();
+    var tecnico_id = $("#cbtecnico").val();
+    var descricao = $("#descricao").val();
+
+    axios.post('/api/orders', {
+        "id_client": client_id,
+        "id_external_user": tecnico_id,
+        "defect": descricao,
+        "requester_name": requester_name,
+        "requester_phone": tel_req
+    },
+    {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+    }).catch(function (error) {
+        console.log(error);
+        alert("Erro ao cadastrar ordem de serviço, verifique os dados e tente novamente");
+    })
+})
+
+$("#btn-def-cancelar").on("click", function() {
+    hideRegProb();
+    showAreaRestrita();
+});

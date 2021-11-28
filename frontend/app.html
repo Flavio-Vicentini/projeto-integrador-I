@@ -51,11 +51,50 @@
                     <img src="img/logo.png" alt="Logo MSP">
                 </div>
                 <div class="titulo-header">
-                    <h1>Registro de Defeitos</h1>
+                    <h1>Registro de Ordem de Serviço</h1>
                 </div>
             </div>
         </header>
-        </div>        
+        <div class="flex m70t">
+            <div class="flex-col m15px">
+                <label for="cbcliente">Cliente</label>
+                <select id="cbcliente" class="input w735">
+                    <option></option>
+                    <option>Cadastrar Novo</option>
+                    <option></option>
+                </select>
+            </div>                            
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="requerente">Requerente</label>
+                <input id="requerente" class="input w350"></input>
+            </div>
+            <div class="flex-col m15px">
+                <label for="contato_req">Telefone/Ramal</label>
+                <input id="contato_req" class="input w350"></input>
+            </div>                           
+        </div>      
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="cbtecnico">Técnico Responsável</label>
+                <select id="cbtecnico" class="input w735">
+                    <option></option>
+                </select>
+            </div>     
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="descricao">Descrição</label>
+                <textarea class="input w735 h270" id="descricao"></textarea>
+            </div>                          
+        </div>   
+        <div class="flex">
+            <div class="flex-col m15px w80">
+                <button id="btn-def-salvar" class="">Salvar</button>
+                <button id="btn-def-cancelar" class="">Cancelar</button>
+            </div>                          
+        </div>         
     </div>
     <div id="tela-situacao-protocolo" class="w100 h100">
         <header>
@@ -116,8 +155,7 @@
             </div>                    
         </header>   
         <div>
-            <button id="btn_table">Adicionar Teste</button>
-            <button id="btn_limpar">Limpar Tabela</button>
+            <button id="btn-logoff-tec" class="logoff-btn">Sair do Sistema</button>
             <div class="scroll">
                 <table id="tblservicos" class="m70t margin-auto">
                     <tr>
@@ -143,8 +181,9 @@
         </header>   
         <div>
             <button id="btn-cad-cli">Cadastro de Clientes</button>
+            <button id="btn-cad-tec">Cadastro de Técnicos</button>
             <button id="btn-reg-prob">Registrar Ordem de Serviço</button>
-            <button id="btn-logoff">Sair do Sistema</button>
+            <button id="btn-logoff" class="logoff-btn">Sair do Sistema</button>
         </div>
         <div>
             <div class="scroll">
@@ -191,10 +230,46 @@
         <div class="flex">
             <div class="flex-col m15px w80">
                 <button id="btn-salvar" class="">Salvar</button>
-                <button id="btn-cancelar" class="">Cancelar</button>
+                <button id="btn-cancelar" class="btn-cancelar-adm">Cancelar</button>
             </div>                          
         </div>  
-    </div>       
+    </div>      
+    <div id="tela-cadastro-tecnico" class="w100 h100">
+        <header>
+            <div class="header">
+                <div class="area-logo">
+                    <img src="img/logo.png" alt="Logo MSP">
+                </div>
+                <div class="titulo-header">
+                    <h1>Cadastro de Técnicos</h1>
+                </div>
+            </div>                    
+        </header>
+        <div class="flex m70t">
+            <div class="flex-col m15px">
+                <label for="nome-tec">Nome</label>
+                <input id="nome-tec" class="input w415"></input>
+            </div>                        
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="email-tec">E-mail</label>
+                <input id="email-tec" class="input w415"></input>
+            </div>                                
+        </div>
+        <div class="flex">
+            <div class="flex-col m15px">
+                <label for="senha-tec">Senha</label>
+                <input id="senha-tec" class="input w415" type="password"></input>
+            </div>                          
+        </div>      
+        <div class="flex">
+            <div class="flex-col m15px w80">
+                <button id="btn-salvar-tec" class="">Salvar</button>
+                <button id="btn-cancelar-tec" class="btn-cancelar-adm">Cancelar</button>
+            </div>                          
+        </div>  
+    </div>        
     <script src="js/main.js"></script>
 </body>
 </html>
