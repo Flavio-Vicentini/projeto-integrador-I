@@ -107,12 +107,32 @@ html, body {
     padding: 0 0 0 10px;
 }
 
+.w120 {
+    width: 120px;
+}
+
 .w140 {
     width: 140px;
 }
 
+.w170 {
+    width: 170px;
+}
+
+.w315 {
+    width: 315px;
+}
+
+.w340 {
+    width: 340px;
+}
+
 .w350 {
     width: 350px;
+}
+
+.w372 {
+    width: 372px;
 }
 
 .w415 {
@@ -131,12 +151,20 @@ html, body {
     width: 735px;
 }
 
+.h170 {
+    height: 170px !important;
+}
+
 .h270 {
     height: 270px !important;
 }
 
 .w80 {
     width: 80px;
+}
+
+.ln46 {
+    line-height: 46px;
 }
 
 .input {

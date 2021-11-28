@@ -110,38 +110,66 @@
         <div class="flex m70t">
             <div class="flex-col m15px">
                 <label for="protocolo">Protocolo</label>
-                <span id="prot" class="input w350">#num-prot</span>
+                <span id="prot" class="input w340 ln46"></span>
+                <input type="hidden" id="protocol_id">
             </div>
             <div class="flex-col m15px">
-                <label for="data">Data</label>
-                <span id="data" class="input w140">#data</span>
-            </div>        
+                <label for="sit_prot">Situação</label>
+                <span id="sit_prot" class="input w120 ln46"></span>
+            </div>
             <div class="flex-col m15px">
-                <label for="horario">Horário</label>
-                <span id="hora" class="input w140">#horario</span>
-            </div>                           
+                <label for="datahora">Data/Hora abertura</label>
+                <span id="datahora" class="input w170 ln46 barra-abas"></span>
+            </div>                                  
         </div>
         <div class="flex">
             <div class="flex-col m15px">
                 <label for="cliente">Cliente</label>
-                <span id="cliente" class="input w415">#cliente</span>
+                <span id="cliente" class="input w415 ln46"></span>
             </div>
             <div class="flex-col m15px">
                 <label for="tecnico-atrib">Técnico Responsável</label>
-                <span id="tecnico" class="input w255">#tecnico</span>
+                <span id="tecnico" class="input w255 ln46"></span>
             </div>                                 
         </div>
-        <div class="flex">
-            <div class="flex-col m15px">
-                <label for="acompanhamentos">Acompanhamentos</label>
-                <textarea class="input w715 h270" id="acompanhamentos">#acomp</textarea>
-            </div>                          
-        </div>      
-        <div class="flex">
-            <div class="flex-col m15px w80">
-                <button id="btn-voltar" class="input">Voltar</button>
-            </div>                          
-        </div>  
+        <div id="tela-situacao-protocolo-aba-1">
+            <div class="flex">
+                <div class="flex-col m15px">
+                    <label for="acompanhamentos">Acompanhamentos</label>
+                    <textarea class="input w715 h270" id="acompanhamentos" readonly></textarea>
+                </div>                          
+            </div>      
+            <div class="flex">
+                <div class="flex-col m15px w80">
+                    <button id="btn-atualizar" class="input">Atualizar</button>
+                    <button id="btn-voltar" class="input">Voltar</button>
+                </div>                          
+            </div> 
+        </div> 
+        <div id="tela-situacao-protocolo-aba-2">
+            <div class="flex">
+                <div class="flex-col m15px">
+                    <label for="status">Situação</label>
+                    <select class="input w715" id="status">
+                        <option>Aberto</option>
+                        <option>Pendente</option>
+                        <option>Solucionado</option>
+                    </select>
+                </div>  
+            </div>  
+            <div class="flex">
+                <div class="flex-col m15px">
+                    <label for="novo-acompanhamento">Novo Acompanhamento</label>
+                    <textarea class="input w715 h170" id="novo-acompanhamento"></textarea>
+                </div>                          
+            </div> 
+            <div class="flex">
+                <div class="flex-col m15px w80">
+                    <button id="btn-salvar-obs" class="input">Salvar Alterações</button>
+                    <button id="btn-cancelar-obs" class="input">Cancelar</button>
+                </div>                          
+            </div>                
+        </div>
     </div>
     <div id="tela-lista-servicos" class="w100 h100">
         <header>
@@ -159,7 +187,7 @@
             <div class="scroll">
                 <table id="tblservicos" class="m70t margin-auto">
                     <tr>
-                        <th class="w100px">Protocolo</th>
+                        <th class="w120">Protocolo</th>
                         <th class="w255">Cliente</th>
                         <th class="w140">Requerente</th>
                         <th>Opções</th>
@@ -189,7 +217,7 @@
             <div class="scroll">
                 <table id="tblservicos_adm" class="m70t margin-auto">
                     <tr>
-                        <th class="w100px">Protocolo</th>
+                        <th class="w120">Protocolo</th>
                         <th class="w255">Cliente</th>
                         <th class="w140">Requerente</th>
                         <th>Opções</th>

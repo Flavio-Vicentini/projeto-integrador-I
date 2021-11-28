@@ -72,7 +72,7 @@ function listaProtocolos() {
 
         if (localStorage["name"] == "admin") {
         $("#tblservicos_adm").empty();
-        $("#tblservicos_adm").append("<tr><th class='w100px'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
+        $("#tblservicos_adm").append("<tr><th class='w120'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
 
         dados_protocolos.data.forEach(function(protocolo, index) {
             if (protocolo.status != "Solucionado") {
@@ -81,7 +81,7 @@ function listaProtocolos() {
         });
         } else {
             $("#tblservicos").empty();
-            $("#tblservicos").append("<tr><th class='w100px'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
+            $("#tblservicos").append("<tr><th class='w120'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
     
             dados_protocolos.data.forEach(function(protocolo, index) {
                 if (protocolo.status != "Solucionado" && protocolo.external_user.email == localStorage["email"]) {
@@ -101,17 +101,28 @@ function buscaProtocolo(protocolo) {
         headers: {"Authorization": 'Bearer ' + localStorage["token"]}
     }).then(function (response) {
         console.log(response);
-        dados_protocolos_tmp = response;
+        var dados_protocolos_tmp = response;
 
         dados_protocolos_tmp.data.forEach(function(protocolo_tmp, index) {
             if (protocolo_tmp.protocol == protocolo) {
                 $("#tela-situacao-protocolo").show("fast");
+                $("#tela-situacao-protocolo-aba-1").show();
+                $("#tela-situacao-protocolo-aba-2").hide();
 
                 $("#prot").text(protocolo_tmp.protocol);
-                $("#data").text(protocolo_tmp.open_date);
-                $("#hora").text(protocolo_tmp.open_date);
+                $("#protocol_id").val(protocolo_tmp.id);
+                $("#sit_prot").text(protocolo_tmp.status);
+                $("#datahora").text(new Date(protocolo_tmp.open_date));
                 $("#cliente").text(protocolo_tmp.client.name);
                 $("#tecnico").text(protocolo_tmp.external_user.name);
+                $("#status").val(protocolo_tmp.status);
+                $("#acompanhamentos").val("Descrição: " + protocolo_tmp.defect + "\n\n--\n\n");
+
+                if(protocolo_tmp.notes.length > 0) {
+                    protocolo_tmp.notes.forEach(function(note, index) {
+                        $("#acompanhamentos").val($("#acompanhamentos").val() + new Date(note.created_at)+ "\n\t" + note.observations + "\n\n--\n\n");
+                    });
+                }
             } else {
             console.log("Erro: protocolo não encontrado");
         }})
@@ -122,6 +133,9 @@ function buscaProtocolo(protocolo) {
 }
 
 function validaLogin(usuario, senha) {
+
+    $("#email").val("");
+    $("#senha").val("");
 
     axios.post('/api/users/sessions', {
         "email":usuario,
@@ -143,6 +157,7 @@ function validaLogin(usuario, senha) {
 
     }).catch(function (error) {
         console.log(error);
+        $("#email").focus();
         alert("Usuário ou senha inválidos!");
     });
 
@@ -197,10 +212,23 @@ function showLogin() {
     $("#tela-lista-servicos").hide();
     $("#tela-area-restrita").hide();
     $("#tela-cadastro-cliente").hide();    
+    $("#tela-cadastro-tecnico").hide(); 
+    
+    if($("#lnk-con-prot").hasClass("selected")) {
+        $("#protocolo").focus();
+    } else {
+        $("#email").focus();
+    }
+
 }
 
 function showRegProb() {
     $("#tela-registro-defeitos").show("fast");
+
+    $("#requerente").val("");
+    $("#contato_req").val("");
+    $("#descricao").val("");
+
     carregaClientes();
     carregaTecnicos();
 }
@@ -217,6 +245,7 @@ function showAreaRestrita() {
 
 function showCadCli() {
     $("#tela-cadastro-cliente").show("fast");
+    $("#nome-cli").focus();
 }
 
 function showCadTec() {
@@ -225,6 +254,12 @@ function showCadTec() {
 
 function hideLogin() {
     $("#tela-login").hide("fast");
+
+    if(localStorage['token'] == undefined) {
+        $("#btn-atualizar").hide();
+    } else {
+        $("#btn-atualizar").show();
+    }
 }
 
 function hideRegProb() {
@@ -254,6 +289,7 @@ function hideCadTec() {
 showLogin();
 verifySession();
 $("#div-func").hide();
+$("#tela-situacao-protocolo-aba-2").hide();
 
 
 $("#btn_table").on("click", function() {
@@ -262,13 +298,14 @@ $("#btn_table").on("click", function() {
 
 $("#btn_limpar").on("click", function() {
     $("#tblservicos tr").remove();
-    $("#tblservicos").append("<tr><th class='w100px'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
+    $("#tblservicos").append("<tr><th class='w120'>Protocolo</th> <th class='w255'>Cliente</th><th class='w140'>Requerente</th><th>Opções</th></tr>");
 });
 
 $("#lnk-con-prot").on("click", function(){
     $("#div-prot").show();
     $("#lnk-con-prot").addClass("selected");
     $("#lnk-ac-func").removeClass("selected");
+    $("#protocolo").focus();
     $("#div-func").hide();
 });
 
@@ -277,6 +314,7 @@ $("#lnk-ac-func").on("click", function(){
     $("#lnk-ac-func").addClass("selected");
     $("#lnk-con-prot").removeClass("selected");
     $("#div-prot").hide();
+    $("#email").focus();
 });
 
 $("#frm-prot").on("submit", function(e) {
@@ -285,12 +323,26 @@ $("#frm-prot").on("submit", function(e) {
 
     var protocolo = $("#protocolo").val();
 
-    axios.get('/api/orders/protocol', {
-        "protocol": protocolo
-    }).then(function (response) {
+    axios.get('/api/orders/protocol/'+protocolo).then(function (response) {
         console.log(response);
         hideLogin();
-        showSitProt(protocolo.protocol);
+
+        $("#tela-situacao-protocolo").show("fast");
+
+        $("#prot").text(response.data.protocol);
+        $("#sit_prot").text(response.data.status);
+        $("#datahora").text(new Date(response.data.open_date));
+        $("#cliente").text(response.data.client.name);
+        $("#tecnico").text(response.data.external_user.name);
+        $("#acompanhamentos").val("Descrição: " + response.data.defect + "\n\n--\n\n");
+
+        $("#protocolo").val("");
+
+        if(response.data.notes.length > 0) {
+            response.data.notes.forEach(function(note, index) {
+                $("#acompanhamentos").val($("#acompanhamentos").val() + new Date(note.created_at)+ "\n\t" + note.observations + "\n\n--\n\n");
+            });
+        }
     }).catch(function (error) {
         console.log(error);
         alert("Protocolo não encontrado!");
@@ -302,14 +354,16 @@ $("#btn-voltar").on("click", function() {
     hideSitProt();
     if (localStorage["name"] == undefined) {
         showLogin();   
+    } else {
+        listaProtocolos();
     }
 });
 
 $(".logoff-btn").on("click", function() {
     doLogout();
-    showLogin();
     hideAreaRestrita();
     hideListaServ();
+    showLogin();
 });
 
 $("#btn-cad-cli").on("click", function() {
@@ -320,6 +374,7 @@ $("#btn-cad-cli").on("click", function() {
 $("#btn-cad-tec").on("click", function() {
     hideAreaRestrita();
     showCadTec();
+    $("#nome-tec").focus();
 });
 
 $("#btn-reg-prob").on("click", function() {
@@ -377,13 +432,64 @@ $("#btn-def-salvar").on("click", function(e) {
         headers: {"Authorization": 'Bearer ' + localStorage["token"]}
     }).then(function (response) {
         console.log(response);
+        listaProtocolos();
+        hideRegProb();
+        showAreaRestrita();
     }).catch(function (error) {
         console.log(error);
         alert("Erro ao cadastrar ordem de serviço, verifique os dados e tente novamente");
-    })
-})
+    });
+});
 
 $("#btn-def-cancelar").on("click", function() {
     hideRegProb();
     showAreaRestrita();
+});
+
+$("#btn-atualizar").on("click", function() {
+    $("#novo-acompanhamento").val("");
+    $("#tela-situacao-protocolo-aba-1").hide();
+    $("#tela-situacao-protocolo-aba-2").show();
+});
+
+$("#btn-cancelar-obs").on("click", function() {
+    $("#novo-acompanhamento").val("");
+    $("#tela-situacao-protocolo-aba-1").show();
+    $("#tela-situacao-protocolo-aba-2").hide();
+});
+
+$("#btn-salvar-obs").on("click", function() {
+    var obs = $("#novo-acompanhamento").val();
+
+    axios.patch('api/orders/status/' + $("#protocol_id").val(), {
+        "status": $("#status").val()
+    },
+    {
+        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+    }).then(function (response) {
+        console.log(response);
+        buscaProtocolo($("#prot").text());
+
+        $("#tela-situacao-protocolo-aba-1").show();
+        $("#tela-situacao-protocolo-aba-2").hide();
+        
+    }).catch(function (error) {
+        console.log(error);
+        alert("Erro ao alterar status da ordem de serviço, verifique os dados e tente novamente");
+    });   
+
+    if (obs != "") {
+        axios.post('api/orders/notes/' + $("#protocol_id").val(), {
+            "observations": localStorage['name'] + ": " + obs
+        },
+        {
+            headers: {"Authorization": 'Bearer ' + localStorage["token"]}
+        }).then(function (response) {
+            console.log(response);
+            $("#novo-acompanhamento").val("");
+        }).catch(function (error) {
+            console.log(error);
+            alert("Erro ao inserir acompanhamento, verifique os dados e tente novamente");
+        });
+    }
 });
