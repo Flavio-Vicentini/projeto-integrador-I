@@ -27,5 +27,5 @@ serviceOrdersRoutes.post(
   ensureAuthenticate,
   createNoteController.handle
 );
-serviceOrdersRoutes.get("/protocol", listByProtocolController.handle);
+serviceOrdersRoutes.get("/protocol/:protocol", listByProtocolController.handle);
 export { serviceOrdersRoutes };
