@@ -418,13 +418,14 @@ $("#btn-def-salvar").on("click", function(e) {
     var client_id = $("#cbcliente").val();
     var requester_name = $("#requerente").val();
     var tel_req = $("#contato_req").val();
+    var endereco_req = $("#endereco").val();
     var tecnico_id = $("#cbtecnico").val();
     var descricao = $("#descricao").val();
 
     axios.post('/api/orders', {
         "id_client": client_id,
         "id_external_user": tecnico_id,
-        "defect": descricao,
+        "defect": descricao + "\nEndereço para Atendimento: " + endereco_req,
         "requester_name": requester_name,
         "requester_phone": tel_req
     },
