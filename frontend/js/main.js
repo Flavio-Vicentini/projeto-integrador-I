@@ -216,6 +216,7 @@ function showRegProb() {
 
     $("#requerente").val("");
     $("#contato_req").val("");
+    $("#endereco").val("");
     $("#descricao").val("");
 
     carregaClientes();
