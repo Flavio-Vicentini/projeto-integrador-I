@@ -172,8 +172,6 @@ function carregaClientes() {
 
         $("#cbcliente").empty();
         $("#cbcliente").append("<option></option>")
-        $("#cbcliente").append("<option>Cadastrar Novo</option>")
-        $("#cbcliente").append("<option></option>")
 
         dados_clientes.data.forEach(function(cliente, index) {
             $("#cbcliente").append("<option value="+cliente.id+">"+cliente.name+"</option>");
