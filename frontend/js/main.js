@@ -97,36 +97,27 @@ function listaProtocolos() {
 }
 
 function buscaProtocolo(protocolo) {
-    axios.get('/api/orders', {
-        headers: {"Authorization": 'Bearer ' + localStorage["token"]}
-    }).then(function (response) {
+    axios.get('/api/orders/protocol/'+protocolo).then(function (response) {
         console.log(response);
-        var dados_protocolos_tmp = response;
 
-        dados_protocolos_tmp.data.forEach(function(protocolo_tmp, index) {
-            if (protocolo_tmp.protocol == protocolo) {
-                $("#tela-situacao-protocolo").show("fast");
-                $("#tela-situacao-protocolo-aba-1").show();
-                $("#tela-situacao-protocolo-aba-2").hide();
+        $("#tela-situacao-protocolo").show("fast");
+        $("#tela-situacao-protocolo-aba-1").show();
+        $("#tela-situacao-protocolo-aba-2").hide();
 
-                $("#prot").text(protocolo_tmp.protocol);
-                $("#protocol_id").val(protocolo_tmp.id);
-                $("#sit_prot").text(protocolo_tmp.status);
-                $("#datahora").text(new Date(protocolo_tmp.open_date));
-                $("#cliente").text(protocolo_tmp.client.name);
-                $("#tecnico").text(protocolo_tmp.external_user.name);
-                $("#status").val(protocolo_tmp.status);
-                $("#acompanhamentos").val("Descrição: " + protocolo_tmp.defect + "\n\n--\n\n");
-
-                if(protocolo_tmp.notes.length > 0) {
-                    protocolo_tmp.notes.forEach(function(note, index) {
-                        $("#acompanhamentos").val($("#acompanhamentos").val() + new Date(note.created_at)+ "\n\t" + note.observations + "\n\n--\n\n");
-                    });
-                }
-            } else {
-            console.log("Erro: protocolo não encontrado");
-        }})
-
+        $("#prot").text(response.data.protocol);
+        $("#protocol_id").val(response.data.id);
+        $("#sit_prot").text(response.data.status);
+        $("#datahora").text(new Date(response.data.open_date));
+        $("#cliente").text(response.data.client.name);
+        $("#tecnico").text(response.data.external_user.name);
+        $("#status").val(response.data.status);
+        $("#acompanhamentos").val("Descrição: " + response.data.defect + "\n\n--\n\n");
+        
+        if(response.data.notes.length > 0) {
+            response.data.notes.forEach(function(note, index) {
+                $("#acompanhamentos").val($("#acompanhamentos").val() + new Date(note.created_at)+ "\n\t" + note.observations + "\n\n--\n\n");
+            });
+        }        
     }).catch(function (error) {
         console.log(error);
     });
