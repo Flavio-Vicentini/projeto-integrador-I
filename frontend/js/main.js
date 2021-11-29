@@ -477,6 +477,7 @@ $("#btn-salvar-obs").on("click", function() {
         }).then(function (response) {
             console.log(response);
             $("#novo-acompanhamento").val("");
+            buscaProtocolo($("#prot").text());
         }).catch(function (error) {
             console.log(error);
             alert("Erro ao inserir acompanhamento, verifique os dados e tente novamente");
